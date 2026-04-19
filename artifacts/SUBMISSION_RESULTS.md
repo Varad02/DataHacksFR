@@ -11,26 +11,22 @@
 
 ### Mean Expected Loss by Scenario
 ![Mean Expected Loss by Scenario](figures/mean_expected_loss_by_scenario.png)
-Comparison of average expected losses across the two earthquake scenarios (dummy_next_7y and northridge_1994).
 
-### Expected Loss Distribution (Boxplot)
-![Expected Loss Boxplot by Scenario](figures/expected_loss_boxplot_by_scenario.png)
-Distribution of expected losses across all tracts for each scenario, showing median, quartiles, and outliers.
+### Expected Loss Distribution by Scenario
+![Expected Loss Distribution by Scenario](figures/expected_loss_boxplot_by_scenario.png)
 
-### Northridge Top 10 Affected Tracts
-![Northridge Top 10 Tracts](figures/northridge_top10_tracts.png)
-Map visualization of the 10 census tracts with the highest expected losses from the Northridge 1994 earthquake.
+### Top 10 Tracts by Expected Loss (Northridge)
+![Top 10 Tracts by Expected Loss (Northridge)](figures/northridge_top10_tracts.png)
 
-### Damage Ratio by Building Era
-![Northridge Damage Ratio by Era](figures/northridge_damage_ratio_by_era.png)
-Analysis of damage severity across different building eras during the Northridge earthquake scenario.
+### Mean Damage Ratio by Building Era (Northridge)
+![Mean Damage Ratio by Building Era (Northridge)](figures/northridge_damage_ratio_by_era.png)
 
 ## Model Training Smoke Metrics
 
-- MAE: 0.01567
-- R2: 0.90189
-- Training seconds: 0.04
-- Runtime: {'tree_method': 'hist', 'device': 'cpu'}
+- MAE: 0.00015
+- R2: 0.99996
+- Training seconds: 0.70
+- Runtime: {'tree_method': 'hist', 'device': 'cuda'}
 
 ## Test Command
 
