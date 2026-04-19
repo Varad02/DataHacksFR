@@ -20,7 +20,10 @@ Built at DataHacks 2026.
 - [Project Layout](#project-layout)
 - [Tech Stack](#tech-stack)
 - [Quickstart](#quickstart)
+- [Brev GPU Training](#brev-gpu-training)
+- [Databricks Proof](#databricks-proof)
 - [Environment Variables](#environment-variables)
+- [Testing](#testing)
 - [Run the Pipeline](#run-the-pipeline)
 - [Run the App and API](#run-the-app-and-api)
 - [Marimo Entry Points](#marimo-entry-points)
@@ -37,6 +40,25 @@ For each of 2,498 census tracts in LA County, the atlas computes:
 - Distributional breakdown by income decile
 
 The output is an interactive choropleth map where each tract includes a plain-English summary generated via OpenAI.
+
+## Data Engineering & Datasets
+
+| Dataset | Source | Engineering Purpose |
+|---------|--------|----------------------|
+| **Seismic Simulations** | Scripps Institution (prototype: 500 scenarios, 16-receiver grid) | Physics-based ground-motion extraction; PGA/PGV peak metrics across fault scenarios |
+| **Census Tracts & Boundaries** | US Census Bureau (TIGER/Line) | Spatial reference layer; tract centroids used for nearest-receiver KD-tree spatial joins |
+| **Housing Values** | Zillow ZHVI (tract-level) | Economic loss calculation; multiplied by damage ratios to estimate dollar losses |
+| **Building Age/Code Era** | ACS 5-year estimates (% pre-1970, 1970–2000, post-2000) | Fragility curve segmentation; FEMA HAZUS damage models vary by construction era |
+| **Population & Income** | ACS demographics (income deciles, household count) | Loss aggregation and distributional equity analysis; identifies vulnerable populations |
+| **Damage Curves** | FEMA HAZUS fragility database | Machine learning-free physics-based mapping from shaking intensity → structural damage ratio |
+
+**Engineering Pipeline:**
+1. **Spatial Data Fusion** – KD-tree nearest-receiver lookup joins 2,498 tract centroids to 16 seismic receivers (Databricks Spark)
+2. **Feature Extraction** – Per-tract shaking profiles (PGA, PGV) aggregated across 500 scenarios
+3. **Physics-Based Modeling** – FEMA HAZUS curves applied to predict damage ratios per building era (no retraining)
+4. **Economic Loss Estimation** – Tract housing value × damage ratio for scenario-specific dollar estimates
+5. **Monte Carlo Aggregation** – Nonlinear averaging preserves damage function curvature; avoids shaking-space bias
+6. **Web Export** – GeoJSON serialization for interactive Leaflet.js choropleth mapping
 
 ## Key Outputs
 
@@ -182,6 +204,57 @@ py -m venv .venv
 pip install -r requirements.txt
 ```
 
+## Brev GPU Training
+
+Train the XGBoost damage model on Brev with GPU (L40s):
+
+```bash
+python brev/train_xgboost_gpu.py \
+    --input data/processed/property_risk_joined.parquet \
+    --output-dir artifacts \
+    --prefer-gpu
+```
+
+What it produces:
+
+- `artifacts/xgb_damage_model.json`
+- `artifacts/xgb_metrics.json`
+
+If a CUDA-capable XGBoost runtime is not available, run the same command without `--prefer-gpu` for CPU training.
+
+## Databricks Proof
+
+Databricks execution was completed with the project notebooks:
+
+- `databricks/01_pgv_extraction.py`
+- `databricks/02_spatial_join_spark.py`
+
+Validated output table:
+
+- `workspace.default.tract_shaking_full`
+
+Run result summary:
+
+- Total tracts: `2498`
+- Non-null PGA rows: `2498`
+- Non-null PGV rows: `2498`
+
+This confirms full tract coverage for the distributed receiver-to-tract shaking join.
+
+### Databricks Repro Check
+
+Run these in Databricks SQL to verify the same state:
+
+```sql
+SELECT COUNT(*) AS total_rows
+FROM workspace.default.tract_shaking_full;
+
+SELECT
+    SUM(CASE WHEN pga IS NOT NULL THEN 1 ELSE 0 END) AS pga_non_null,
+    SUM(CASE WHEN pgv IS NOT NULL THEN 1 ELSE 0 END) AS pgv_non_null
+FROM workspace.default.tract_shaking_full;
+```
+
 ## Environment Variables
 
 Create `.env` from `.env.example`.
@@ -213,6 +286,27 @@ How to populate:
 1. Open `.env`.
 2. Replace `your_openai_api_key_here` with your real key.
 3. Save the file.
+
+## Testing
+
+Run test suite:
+
+macOS / Linux:
+
+```bash
+python -m unittest discover -s tests -p "test_*.py" -v
+```
+
+Windows PowerShell / CMD:
+
+```bat
+py -m unittest discover -s tests -p "test_*.py" -v
+```
+
+Included scenario tests:
+
+- `test_northridge_1994_conditions`: reenacts a high-intensity Northridge-style stress scenario.
+- `test_dummy_next_7_year_scenario`: dummy medium-term scenario with moderate adaptation.
 
 ## Run the Pipeline
 
@@ -247,8 +341,10 @@ Then open `http://localhost:3000`.
 
 ```bash
 python demo_marimo.py
-python demo_marimo.py --step 05
+python demo_marimo.py --step 11
 ```
+
+The main demo notebook is [notebooks/11_demo_run.py](notebooks/11_demo_run.py). It runs the past-earthquake and 7-year dummy scenarios in one place.
 
 ## Data Sources
 

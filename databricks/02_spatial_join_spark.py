@@ -4,15 +4,15 @@
 
 # COMMAND ----------
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import col, sqrt, pow as spow, min as smin, first
+from pyspark.sql.functions import col, sqrt, pow as spow, min as smin, first, avg
 import pandas as pd
 import numpy as np
 
 spark = SparkSession.builder.getOrCreate()
 
 # COMMAND ----------
-# Load features from Delta table
-features_df = spark.table("seismic.pgv_pga_features")
+# Load features from Delta table written by 01_pgv_extraction.py
+features_df = spark.table("workspace.default.pgv_pga_features")
 print(f"Features: {features_df.count():,} rows")
 
 # Load receiver locations (upload receiver_locations.csv to DBFS)
@@ -53,9 +53,10 @@ print(f"Tract-receiver assignments: {nearest.count()}")
 # COMMAND ----------
 # Join all 500 source scenarios onto each tract via its receiver
 mean_shaking = features_df.groupBy("receiver_id").agg(
-    {"pga": "mean", "pgv": "mean"}
-).withColumnRenamed("avg(pga)", "pga").withColumnRenamed("avg(pgv)", "pgv")
+    avg("pga").alias("pga"),
+    avg("pgv").alias("pgv"),
+)
 
 joined = nearest.join(mean_shaking, on="receiver_id", how="left")
-joined.write.format("delta").mode("overwrite").saveAsTable("seismic.tract_shaking_full")
-print("Saved seismic.tract_shaking_full")
+joined.write.format("delta").mode("overwrite").saveAsTable("workspace.default.tract_shaking_full")
+print("Saved workspace.default.tract_shaking_full")
