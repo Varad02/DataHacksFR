@@ -107,7 +107,6 @@ Runtime flow:
 ```text
 DataHacksFR/
 ├── README.md
-├── JUSTIFICATION.md
 ├── PROJECT_PLAN.md
 ├── requirements.txt
 ├── demo_marimo.py
