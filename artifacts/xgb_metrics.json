@@ -2,9 +2,9 @@
   "rows": 2498,
   "train_rows": 1998,
   "test_rows": 500,
-  "mae": 0.015673482790589333,
-  "r2": 0.901894211769104,
-  "train_seconds": 0.03765368461608887,
+  "mae": 0.00015358977543655783,
+  "r2": 0.9999642968177795,
+  "train_seconds": 0.7040343284606934,
   "features": [
     "pga_g",
     "pgv",
@@ -12,12 +12,12 @@
   ],
   "runtime": {
     "tree_method": "hist",
-    "device": "cpu"
+    "device": "cuda"
   },
   "feature_importances": {
-    "pga_g": 0.5270825028419495,
-    "pgv": 0.37096136808395386,
-    "era_code": 0.10195611417293549
+    "pga_g": 0.4296424686908722,
+    "pgv": 0.3737487196922302,
+    "era_code": 0.1966087967157364
   },
   "model_path": "artifacts/xgb_damage_model.json"
 }

@@ -1,20 +1,49 @@
 // Seismic Risk Atlas -- Leaflet choropleth map
 // Loads risk_data.geojson (same directory) produced by notebooks/07_export_map_geojson.py
 
-const map = L.map("map").setView([34.05, -118.05], 11);  // Whittier Narrows / East LA
+const map = L.map("map").setView([34.05, -118.05], 11); // Whittier Narrows / East LA
 
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
   attribution: "&copy; OpenStreetMap contributors",
   opacity: 0.6,
 }).addTo(map);
 
+const palette = ["#FED976", "#FD8D3C", "#FC4E2A", "#E31A1C", "#BD0026", "#800026"];
+let lossBreaks = [0, 1, 2, 3, 4, 5, 6];
+
+function quantile(values, q) {
+  if (!values.length) return 0;
+  const sorted = [...values].sort((a, b) => a - b);
+  const pos = (sorted.length - 1) * q;
+  const base = Math.floor(pos);
+  const rest = pos - base;
+  if (sorted[base + 1] !== undefined) {
+    return sorted[base] + rest * (sorted[base + 1] - sorted[base]);
+  }
+  return sorted[base];
+}
+
+function computeLossBreaks(geojson) {
+  const losses = geojson.features
+    .map((f) => Number(f?.properties?.mean_loss_per_household))
+    .filter((x) => Number.isFinite(x) && x >= 0);
+
+  if (!losses.length) return [0, 1, 2, 3, 4, 5, 6];
+
+  const q = [0, 0.2, 0.4, 0.6, 0.8, 0.95, 1].map((p) => quantile(losses, p));
+
+  // Enforce monotonic increasing thresholds to avoid duplicate legend steps.
+  for (let i = 1; i < q.length; i += 1) {
+    if (q[i] <= q[i - 1]) q[i] = q[i - 1] + 1e-6;
+  }
+  return q;
+}
+
 function getColor(loss) {
-  return loss > 200000 ? "#800026" :
-         loss > 100000 ? "#BD0026" :
-         loss > 50000  ? "#E31A1C" :
-         loss > 20000  ? "#FC4E2A" :
-         loss > 10000  ? "#FD8D3C" :
-                         "#FED976";
+  for (let i = lossBreaks.length - 1; i >= 1; i -= 1) {
+    if (loss >= lossBreaks[i - 1]) return palette[i - 1];
+  }
+  return palette[0];
 }
 
 function style(feature) {
@@ -30,7 +59,8 @@ function style(feature) {
 
 function fmt$(n) {
   if (n == null || isNaN(n)) return "N/A";
-  return "$" + Math.round(n).toLocaleString();
+  if (n >= 1000) return "$" + Math.round(n).toLocaleString();
+  return "$" + Number(n).toFixed(2);
 }
 
 function fmtPct(n) {
@@ -39,6 +69,30 @@ function fmtPct(n) {
 }
 
 let activeLayer = null;
+
+function renderLegend() {
+  const legendEl = document.getElementById("legend");
+  const labels = [];
+  for (let i = 0; i < palette.length; i += 1) {
+    const low = lossBreaks[i];
+    const high = lossBreaks[i + 1];
+    if (i === palette.length - 1) {
+      labels.push(`>= ${fmt$(low)}`);
+    } else {
+      labels.push(`${fmt$(low)} - ${fmt$(high)}`);
+    }
+  }
+
+  legendEl.innerHTML = `
+    <h4>Expected loss / household</h4>
+    ${palette
+      .map(
+        (color, i) =>
+          `<div class="legend-row"><div class="legend-swatch" style="background:${color}"></div>${labels[i]}</div>`
+      )
+      .join("")}
+  `;
+}
 
 function onEachFeature(feature, layer) {
   layer.on("click", async () => {
@@ -91,11 +145,15 @@ function onEachFeature(feature, layer) {
 
 async function loadData() {
   try {
-    const resp = await fetch("risk_data.geojson");
+    const resp = await fetch("./risk_data.geojson");
     if (!resp.ok) throw new Error("GeoJSON not found");
     const geojson = await resp.json();
 
-    L.geoJSON(geojson, { style, onEachFeature }).addTo(map);
+    lossBreaks = computeLossBreaks(geojson);
+    renderLegend();
+
+    const layer = L.geoJSON(geojson, { style, onEachFeature }).addTo(map);
+    map.fitBounds(layer.getBounds(), { padding: [16, 16] });
     console.log(`Loaded ${geojson.features.length} tracts`);
   } catch (e) {
     console.error("Could not load risk_data.geojson:", e);

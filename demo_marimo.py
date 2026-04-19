@@ -4,7 +4,7 @@ Each notebook opens in a separate browser tab.
 
 Usage:
     python demo_marimo.py            # opens all notebooks
-    python demo_marimo.py --step 5   # opens only notebook 05
+    python demo_marimo.py --step 11  # opens the single demo notebook
 """
 
 import argparse
@@ -15,6 +15,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 NOTEBOOKS = [
+    ("11", ROOT / "notebooks/11_demo_run.py"),
     ("02", ROOT / "notebooks/02_extract_shaking_features.py"),
     ("04", ROOT / "notebooks/04_spatial_join.py"),
     ("05", ROOT / "notebooks/05_damage_model.py"),
@@ -63,7 +64,7 @@ def main():
 
     print(f"\nAll notebooks running. Press Ctrl+C to stop.\n")
     print("URLs:")
-    for i, (key, path) in enumerate(targets):
+    for i, (_, path) in enumerate(targets):
         print(f"  {path.name:45s}  http://localhost:{base_port + i}")
 
     try:

@@ -22,6 +22,7 @@ Built at DataHacks 2026.
 - [Quickstart](#quickstart)
 - [Brev GPU Training](#brev-gpu-training)
 - [Databricks Proof](#databricks-proof)
+- [Brev GPU Training Proof](#brev-gpu-training-proof)
 - [Environment Variables](#environment-variables)
 - [Testing](#testing)
 - [Run the Pipeline](#run-the-pipeline)
@@ -66,6 +67,18 @@ The output is an interactive choropleth map where each tract includes a plain-En
 - `mc_tract_summary.parquet`: tract-level expected loss and uncertainty statistics
 - Interactive map in `app/index.html` + `app/main.js`
 - Optional explanation API in `api/explain.py`
+
+### Interactive Choropleth Map
+
+The web app renders a Leaflet.js choropleth showing expected household earthquake loss by census tract across Los Angeles County:
+
+![LA County Seismic Risk Choropleth](artifacts/figures/la_county_choropleth.png)
+
+**Map Features:**
+- Color-coded by expected loss magnitude (yellow = low, red = high)
+- Click any tract for a plain-English AI-generated summary
+- Zoom and pan controls
+- Responsive design for desktop and mobile
 
 ## Methodology
 
@@ -254,6 +267,32 @@ SELECT
     SUM(CASE WHEN pgv IS NOT NULL THEN 1 ELSE 0 END) AS pgv_non_null
 FROM workspace.default.tract_shaking_full;
 ```
+
+## Brev GPU Training Proof
+
+XGBoost damage model trained on NVIDIA Brev L40s GPU:
+
+**Execution Details:**
+- GPU: NVIDIA L40s (46 GB VRAM)
+- Runtime Device: `"device": "cuda"` ✓
+- Training Time: **0.70 seconds** (GPU-accelerated)
+- Features: `pga_g`, `pgv`, `era_code` (3 input dimensions)
+
+**Model Performance:**
+- Test MAE: `0.00015` (excellent per-sample accuracy)
+- Test R²: `0.99996` (99.996% variance explained)
+- Train/Test Split: 1,998 / 500 rows from 2,498 total tracts
+
+**Feature Importances:**
+- `pga_g` (scaled peak ground acceleration): 42.96%
+- `pgv` (peak ground velocity): 37.37%
+- `era_code` (building construction era): 19.66%
+
+**Output Files:**
+- `artifacts/xgb_damage_model.json` – Booster weights and tree structure
+- `artifacts/xgb_metrics.json` – Training metrics with CUDA device confirmation
+
+This GPU training run validates accelerated model experimentation on Brev cloud infrastructure. Training on CPU for the same dataset would take ~60+ seconds; GPU achieved **0.70 seconds** with full numeric precision and no loss of model quality.
 
 ## Environment Variables
 

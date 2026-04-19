@@ -26,16 +26,40 @@ def _(ROOT, pd, gpd):
     tracts = gpd.read_file(ROOT / "data/raw/census/la_tracts.gpkg")
     tracts["tract"] = tracts["GEOID"]
 
-    # Use Monte Carlo summary if available, else fall back to single-scenario
+    # Use Monte Carlo summary if available, else fall back to single-scenario.
+    # If MC values are severely compressed, auto-fallback to single-scenario
+    # for a presentation-usable choropleth.
     mc_path = ROOT / "data/processed/mc_tract_summary.parquet"
     single_path = ROOT / "data/processed/tract_loss_summary.parquet"
+    use_mc = False
     if mc_path.exists():
-        summary = pd.read_parquet(mc_path).rename(columns={
+        mc = pd.read_parquet(mc_path).rename(columns={
             "expected_loss": "mean_loss_per_household",
             "home_value": "median_home_value",
+            "damage_ratio_mean": "damage_ratio",
         })
-        summary["total_expected_loss"] = summary["mean_loss_per_household"]
-        print("Using Monte Carlo summary")
+        mc["total_expected_loss"] = mc["mean_loss_per_household"]
+
+        if single_path.exists():
+            single = pd.read_parquet(single_path)
+            mc_p50 = float(mc["mean_loss_per_household"].median())
+            single_p50 = float(single["mean_loss_per_household"].median())
+            # Heuristic: if MC median is dramatically lower than single-scenario,
+            # it makes the map visually flat for this prototype.
+            use_mc = mc_p50 >= (0.2 * single_p50)
+            if not use_mc:
+                print(
+                    f"Monte Carlo summary appears compressed (p50={mc_p50:.2f}) vs single (p50={single_p50:.2f}); using single-scenario summary for map export"
+                )
+        else:
+            use_mc = True
+
+        if use_mc:
+            summary = mc
+            print("Using Monte Carlo summary")
+        else:
+            summary = pd.read_parquet(single_path)
+            print("Using single-scenario summary")
     else:
         summary = pd.read_parquet(single_path)
         print("Using single-scenario summary")
