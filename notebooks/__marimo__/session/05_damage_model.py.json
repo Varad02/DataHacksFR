@@ -1,0 +1,40 @@
+{
+  "version": "1",
+  "metadata": {
+    "marimo_version": "0.23.1",
+    "script_metadata_hash": null
+  },
+  "cells": [
+    {
+      "id": "Hbol",
+      "code_hash": "44d458074f501755600d6c072fdbf242",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "MJUe",
+      "code_hash": "b44eaef05fe63da5ab93fc295c6e78e0",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"05-apply-hazus-damage-functions\">05 -- Apply HAZUS Damage Functions</h2></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "vblA",
+      "code_hash": "5fc6e7e32aa7ac6aa775bc858ce71b96",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "bkHC",
+      "code_hash": "75112949c52dc200a7b97caa89fa1fe8",
+      "outputs": [],
+      "console": []
+    }
+  ]
+}

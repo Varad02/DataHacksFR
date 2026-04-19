@@ -1,0 +1,58 @@
+{
+  "version": "1",
+  "metadata": {
+    "marimo_version": "0.23.1",
+    "script_metadata_hash": null
+  },
+  "cells": [
+    {
+      "id": "Hbol",
+      "code_hash": "c827c8ad07693fc40ef437dc710ca446",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "MJUe",
+      "code_hash": "061a50b7521d957cfeda5109dce5cb54",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"09-monte-carlo-expected-loss\">09 -- Monte Carlo Expected Loss</h2>\n<span class=\"paragraph\">Instead of averaging PGA across 500 sources before applying HAZUS (wrong -- nonlinear),\napply HAZUS to each of the 500 scenarios separately, then average the losses.\nWeight = 1/500 (uniform -- UCERF3 noted as future improvement).</span></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "vblA",
+      "code_hash": "0d227444e4a3006a0d1e58de720f99cd",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "bkHC",
+      "code_hash": "ed544ec94329ec1f8375a5028c048513",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "lEQa",
+      "code_hash": "139a3f6827abed7013730b93d72f2efe",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "PKri",
+      "code_hash": "926875a5066aae0489ba3565cd2194fb",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "Xref",
+      "code_hash": "15637aa71b2b8a33dceef0eab49f96dd",
+      "outputs": [],
+      "console": []
+    }
+  ]
+}

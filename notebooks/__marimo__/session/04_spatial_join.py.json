@@ -1,0 +1,40 @@
+{
+  "version": "1",
+  "metadata": {
+    "marimo_version": "0.23.1",
+    "script_metadata_hash": null
+  },
+  "cells": [
+    {
+      "id": "Hbol",
+      "code_hash": "4960e229cc69d592a440954bd6b8e422",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "MJUe",
+      "code_hash": "8b9cc3c2ab66176685f320c2f6fac424",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"04-spatial-join-properties-to-receivers\">04 -- Spatial Join: Properties to Receivers</h2></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "vblA",
+      "code_hash": "27c70c7673aa708901d9789d99a42b67",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "bkHC",
+      "code_hash": "8a1c803e435802b00873efdd8f98cf6a",
+      "outputs": [],
+      "console": []
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "version": "1",
+  "metadata": {
+    "marimo_version": "0.23.1",
+    "script_metadata_hash": null
+  },
+  "cells": [
+    {
+      "id": "Hbol",
+      "code_hash": "aeea7a7351a09d23a954cc1cf6cc5869",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "MJUe",
+      "code_hash": "354d8146ee2665e28f9beff8df2b69c9",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"06-expected-dollar-loss-per-household\">06 -- Expected Dollar Loss per Household</h2></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "vblA",
+      "code_hash": "f979fa96768c0852ad347aa05cbabcc0",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "bkHC",
+      "code_hash": "7450b7622a9822ed3191029c9ae5fdf1",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "lEQa",
+      "code_hash": "852ceee9f228950bf8781cf0b9711631",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "PKri",
+      "code_hash": "b98da3b635e13ebd061b66744f01b747",
+      "outputs": [],
+      "console": []
+    }
+  ]
+}

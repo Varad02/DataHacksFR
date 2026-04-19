@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Seismic Risk Atlas -- Los Angeles</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    #map { height: 100vh; width: 100%; }
+
+    #sidebar {
+      position: absolute; top: 16px; right: 16px; z-index: 1000;
+      background: white; padding: 20px; border-radius: 10px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2); width: 300px;
+    }
+    #sidebar h1 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+    #sidebar .subtitle { font-size: 11px; color: #888; margin-bottom: 14px; }
+    #tract-name { font-size: 13px; font-weight: 600; margin-bottom: 8px; color: #111; }
+    #stats { font-size: 12px; color: #444; line-height: 1.8; margin-bottom: 10px; }
+    #explanation { font-size: 12px; color: #333; line-height: 1.6; border-top: 1px solid #eee; padding-top: 10px; }
+    .placeholder { color: #aaa; font-style: italic; }
+
+    #legend {
+      position: absolute; bottom: 32px; left: 16px; z-index: 1000;
+      background: white; padding: 12px 16px; border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15); font-size: 11px;
+    }
+    #legend h4 { font-size: 11px; font-weight: 600; margin-bottom: 8px; color: #333; }
+    .legend-row { display: flex; align-items: center; margin-bottom: 4px; }
+    .legend-swatch { width: 16px; height: 16px; border-radius: 3px; margin-right: 8px; flex-shrink: 0; }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+
+  <div id="sidebar">
+    <h1>Seismic Risk Atlas</h1>
+    <div class="subtitle">LA County -- M6.7 Whittier Narrows scenario</div>
+    <div id="tract-name" class="placeholder">Click a neighborhood</div>
+    <div id="stats"></div>
+    <div id="explanation" class="placeholder">Expected dollar loss per household and income distribution will appear here.</div>
+  </div>
+
+  <div id="legend">
+    <h4>Expected loss / household</h4>
+    <div class="legend-row"><div class="legend-swatch" style="background:#800026"></div>&gt; $200k</div>
+    <div class="legend-row"><div class="legend-swatch" style="background:#BD0026"></div>$100k -- $200k</div>
+    <div class="legend-row"><div class="legend-swatch" style="background:#E31A1C"></div>$50k -- $100k</div>
+    <div class="legend-row"><div class="legend-swatch" style="background:#FC4E2A"></div>$20k -- $50k</div>
+    <div class="legend-row"><div class="legend-swatch" style="background:#FD8D3C"></div>$10k -- $20k</div>
+    <div class="legend-row"><div class="legend-swatch" style="background:#FED976"></div>&lt; $10k</div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>

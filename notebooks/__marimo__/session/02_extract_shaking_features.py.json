@@ -1,0 +1,40 @@
+{
+  "version": "1",
+  "metadata": {
+    "marimo_version": "0.23.1",
+    "script_metadata_hash": null
+  },
+  "cells": [
+    {
+      "id": "Hbol",
+      "code_hash": "9f47535e12df9a0b1ee756f11629b73d",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "MJUe",
+      "code_hash": "61f3a2fde145ab0dc2f98965c85c3675",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"02-extract-pgv-pga-from-seismograms\">02 -- Extract PGV / PGA from Seismograms</h2></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "vblA",
+      "code_hash": "733526674e5b8cfd8ca17bb1aeee9b3f",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "bkHC",
+      "code_hash": "f6bda277defa1a7b86b2e42d1c5198c2",
+      "outputs": [],
+      "console": []
+    }
+  ]
+}

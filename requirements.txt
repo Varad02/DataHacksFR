@@ -1,0 +1,35 @@
+# Core
+numpy
+pandas
+scipy
+pyarrow
+
+# Seismic / spatial
+scikit-learn
+xgboost
+geopandas
+
+# Visualization
+matplotlib
+folium
+geopandas
+
+# Notebooks
+marimo
+
+# API
+fastapi
+uvicorn[standard]
+pydantic
+
+# OpenAI
+openai
+python-dotenv
+
+# Census / web
+requests
+uszipcode
+
+# Docs
+sphinx
+sphinx-rtd-theme
